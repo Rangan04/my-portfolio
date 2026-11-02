@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rangan Kulavi — Software & AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C0C0C;
+  --bg-card:#141416;
+  --bg-subtle:#1D1D20;
+  --fg:#D7E2EA;
+  --fg-mut:#8E9BA6;
+  --border:rgba(215,226,234,0.14);
+  --border-strong:rgba(215,226,234,0.3);
+  --orb-op:0.85;
+  --menu-bg:rgba(12,12,12,0.96);
+  --ghost-bg:rgba(255,255,255,0.03);
+  --ghost-hover:rgba(215,226,234,0.12);
+  --skills-bg:#FFFFFF;
+  --skills-fg:#0C0C0C;
+  --skills-border:rgba(12,12,12,0.15);
+  --brand-grad:linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%);
+  --accent-glow:rgba(182,0,168,0.35);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+[data-theme="light"]{
+  --bg:#F5F7FA;
+  --bg-card:#FFFFFF;
+  --bg-subtle:#E8EDF2;
+  --fg:#0F172A;
+  --fg-mut:#556476;
+  --border:rgba(15,23,42,0.12);
+  --border-strong:rgba(15,23,42,0.25);
+  --orb-op:0.35;
+  --menu-bg:rgba(245,247,250,0.97);
+  --ghost-bg:rgba(15,23,42,0.04);
+  --ghost-hover:rgba(15,23,42,0.09);
+  --skills-bg:#0F172A;
+  --skills-fg:#F8FAFC;
+  --skills-border:rgba(255,255,255,0.15);
+  --accent-glow:rgba(182,0,168,0.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);font-family:'Kanit',sans-serif;color:var(--fg);scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px);transition:background .35s,color .35s}
+main{overflow-x:clip;background:var(--bg)}
+a{color:inherit;text-decoration:none}
+.g{background:linear-gradient(180deg,#646973 0%,#BBCCD7 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;text-transform:uppercase;line-height:1;letter-spacing:-.02em}
+[data-theme="light"] .g{background:linear-gradient(180deg,#1E293B 0%,#64748B 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.fade{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.25,.1,.25,1),transform .7s cubic-bezier(.25,.1,.25,1)}
+.fade.in{opacity:1;transform:none}
+
+/* Controls Header */
+.top-controls{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:20px;right:20px;z-index:101;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.top-controls>*{pointer-events:auto}
+#burger{display:flex;align-items:center;gap:12px;padding:10px 18px 10px 16px;border:1px solid var(--border-strong);border-radius:999px;background:var(--menu-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--fg);cursor:pointer;transition:border-color .3s,transform .2s}
+#burger:hover{border-color:#B600A8;transform:scale(1.02)}
+.bl{display:flex;flex-direction:column;gap:5px;width:24px}
+#burger .bl i{height:2px;width:100%;background:var(--fg);border-radius:2px;transition:width .3s,transform .3s,opacity .3s}
+#burger .bl i:nth-child(2){width:65%}
+#burger .bl i:nth-child(3){width:40%}
+#burger:hover .bl i{width:100%}
+#burger.x .bl i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#burger.x .bl i:nth-child(2){opacity:0}
+#burger.x .bl i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+#burger em{font-style:normal;text-transform:uppercase;letter-spacing:.2em;font-size:.75rem;font-weight:500}
+#burger em::before{content:'Menu'}
+#burger.x em::before{content:'Close'}
+
+.theme-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border-strong);border-radius:999px;background:var(--menu-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--fg);cursor:pointer;font-family:inherit;font-weight:500;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;transition:border-color .3s,transform .2s}
+.theme-btn:hover{border-color:#7621B0;transform:scale(1.02)}
+.theme-btn svg{width:18px;height:18px;display:block}
+
+/* Menu */
+#menu{position:fixed;inset:0;z-index:100;background:var(--menu-bg);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:0 8vw;gap:16px;opacity:0;pointer-events:none;transition:opacity .3s}
+#menu.open{opacity:1;pointer-events:auto}
+#menu .ml{display:flex;align-items:baseline;gap:20px;text-transform:uppercase;font-weight:900;font-size:clamp(2.2rem,7.5vw,5.5rem);line-height:1.05;color:var(--fg);border-bottom:1px solid var(--border);padding:6px 0;width:min(100%,900px);opacity:0;transform:translateY(30px);transition:opacity .5s,transform .5s,padding .3s}
+#menu.open .ml{opacity:1;transform:none;transition-delay:calc(var(--n)*.06s + .1s)}
+#menu .ml s{text-decoration:none;font-size:.9rem;font-weight:400;letter-spacing:.1em;opacity:.5}
+#menu .ml:hover{padding-left:24px;background:linear-gradient(90deg,#B600A8,#BE4C00);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:1}
+.mf{margin-top:28px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;font-weight:400;opacity:.8;letter-spacing:.08em;text-transform:uppercase;font-size:.85rem}
+.menu-socials{display:flex;gap:12px;margin-top:10px}
+.menu-social-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;border:1px solid var(--border);background:var(--ghost-bg);font-size:.8rem;font-weight:500;letter-spacing:.05em;transition:all .2s}
+.menu-social-pill:hover{border-color:#B600A8;background:var(--ghost-hover);transform:translateY(-2px)}
+
+/* Hero */
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;position:relative;padding:0 24px;justify-content:space-between}
+.hero-spacer{height:72px}
+.hh{margin-top:12px;position:relative;z-index:11;pointer-events:none}
+.eb{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:999px;padding:6px 18px 6px 12px;text-transform:uppercase;letter-spacing:.15em;font-weight:500;font-size:clamp(.7rem,1.2vw,1rem);background:var(--ghost-bg)}
+.dot{width:9px;height:9px;border-radius:50%;background:#3ddc84;animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(61,220,132,.7)}70%,100%{box-shadow:0 0 0 10px rgba(61,220,132,0)}}
+.wave{display:inline-block;transform-origin:70% 70%;animation:wv 2.4s infinite}
+@keyframes wv{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(14deg)}20%{transform:rotate(-8deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(10deg)}}
+.hero h1.rg{display:flex;font-size:clamp(3.8rem,18vw,16rem);margin-top:4px;line-height:.95;letter-spacing:-.02em;font-weight:900;text-transform:uppercase;overflow:hidden;padding-bottom:.04em;z-index:auto}
+.rg b{display:inline-block;font-weight:900;background:linear-gradient(180deg,#646973 0%,#EAF3F8 50%,#646973 100%);background-size:100% 220%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:rise .9s cubic-bezier(.2,.8,.2,1) both,sh 6s ease-in-out infinite;animation-delay:calc(var(--i)*.08s + .2s),0s}
+[data-theme="light"] .rg b{background:linear-gradient(180deg,#1E293B 0%,#0284C7 50%,#1E293B 100%);background-size:100% 220%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@keyframes rise{from{transform:translateY(105%) rotate(6deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes sh{0%,100%{background-position:0 0}50%{background-position:0 100%}}
+.sub{display:flex;align-items:center;gap:14px;text-transform:uppercase;letter-spacing:.2em;font-weight:300;font-size:clamp(.7rem,1.3vw,1.1rem);margin-top:6px}
+.sub span{height:2px;width:clamp(40px,8vw,120px);background:linear-gradient(90deg,#B600A8,#BE4C00)}
+
+/* Portrait & Avatar */
+.portrait{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:clamp(260px,32vw,460px);aspect-ratio:3/4;z-index:10;border-radius:200px 200px 0 0;background:radial-gradient(circle at 50% 30%,#7621B0,#18011F 75%);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:transform .3s ease-out;will-change:transform;box-shadow:0 20px 60px -10px var(--accent-glow)}
+[data-theme="light"] .portrait{background:radial-gradient(circle at 50% 30%,#8B5CF6,#2E1065 80%)}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+#fl{animation:bob 4s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-8px)}}
+.pu{transition:transform .12s ease-out}
+.eye.w{animation:none!important;transform:scaleY(.1)!important}
+
+/* Orbit Ring */
+.ring{position:absolute;--w:min(52vw,740px);width:var(--w);aspect-ratio:1;left:calc(50% - var(--w)/2);bottom:3vw;z-index:1;pointer-events:none;border-radius:50%;border:2px dashed var(--border-strong);animation:spin 32s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rspin{to{transform:rotate(-360deg)}}
+.ring .o{position:absolute;width:52px;height:52px;margin:-26px 0 0 -26px}
+.ring .o i{width:100%;height:100%;border-radius:15px;display:grid;place-items:center;font-style:normal;font-weight:900;animation:rspin 32s linear infinite;box-shadow:0 10px 24px -4px var(--accent-glow);border:1px solid rgba(255,255,255,.2);font-size:.8rem}
+.ring .o svg{width:28px;height:28px}
+
+/* Speech Bubble */
+.bub{position:absolute;z-index:12;left:calc(50% + clamp(40px,11vw,180px));bottom:calc(clamp(260px,32vw,460px)*0.95);background:var(--bg-card);color:var(--fg);font-weight:500;padding:12px 22px;border-radius:22px 22px 22px 4px;font-size:clamp(.85rem,1.25vw,1.05rem);border:1px solid var(--border-strong);box-shadow:0 12px 32px var(--accent-glow);animation:pop .4s both;max-width:260px;cursor:pointer;user-select:none;transition:transform .2s,box-shadow .2s}
+.bub:hover{transform:scale(1.04);box-shadow:0 14px 40px rgba(182,0,168,.5)}
+.bub::after{content:'Click me 💬';display:block;font-size:.68rem;opacity:.55;text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+@keyframes pop{from{opacity:0;transform:scale(.5) translateY(15px)}to{opacity:1;transform:none}}
+
+/* Hero Bottom Bar */
+.hbar{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:32px;position:relative;z-index:20;gap:20px;flex-wrap:wrap}
+.hbar p{font-weight:300;text-transform:uppercase;letter-spacing:.03em;line-height:1.2;font-size:clamp(.75rem,1.3vw,1.2rem);max-width:240px;color:var(--fg-mut)}
+.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:var(--brand-grad);box-shadow:0 4px 14px rgba(181,1,167,.35),inset 2px 2px 8px #7721B1;outline:2px solid rgba(255,255,255,.9);outline-offset:-3px;color:#fff;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:12px 32px;font-size:.85rem;cursor:pointer;transition:transform .2s,box-shadow .2s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(181,1,167,.55)}
+.social-pill{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--border-strong);border-radius:999px;background:var(--ghost-bg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:10px 20px;font-size:.85rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--fg);cursor:pointer;transition:all .2s;white-space:nowrap}
+.social-pill:hover{border-color:#B600A8;background:var(--ghost-hover);transform:translateY(-2px);color:var(--fg)}
+.social-pill svg{width:16px;height:16px;fill:currentColor}
+.ghost{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--border-strong);border-radius:999px;text-transform:uppercase;letter-spacing:.1em;padding:10px 24px;font-size:.85rem;font-weight:500;transition:all .2s;white-space:nowrap;background:transparent;color:var(--fg)}
+.ghost:hover{background:var(--ghost-hover);border-color:#7621B0}
+
+/* Marquee */
+.mq{padding:80px 0 30px;position:relative;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.mq::before,.mq::after{content:'';position:absolute;top:0;bottom:0;width:14vw;z-index:2;pointer-events:none}
+.mq::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.mq::after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+.row{display:flex;gap:14px;width:max-content;will-change:transform}
+.tc{width:290px;height:160px;flex:none;border-radius:24px;position:relative;overflow:hidden;padding:18px;display:flex;flex-direction:column;justify-content:space-between;background:var(--bg-card);border:1px solid var(--border);transition:transform .3s,border-color .3s}
+.tc::before{content:'';position:absolute;width:180px;height:180px;right:-60px;top:-60px;border-radius:50%;background:var(--c);filter:blur(50px);opacity:.35;transition:opacity .35s}
+.tc:hover{transform:translateY(-6px);border-color:var(--c)}
+.tc:hover::before{opacity:.7}
+.tc .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-weight:900;font-size:1.1rem;position:relative;box-shadow:0 8px 24px -4px var(--c)}
+.tc .ic svg{width:32px;height:32px}
+.tc b{display:block;font-weight:900;text-transform:uppercase;font-size:1.35rem;line-height:1;position:relative;color:var(--fg)}
+.tc small{opacity:.65;letter-spacing:.08em;text-transform:uppercase;font-size:.75rem;position:relative;color:var(--fg-mut)}
+.tc em{position:absolute;right:18px;bottom:12px;font-style:normal;font-weight:900;font-size:2.8rem;opacity:.08;line-height:1;color:var(--fg)}
+
+/* About */
+.about{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;padding:80px 20px;text-align:center;position:relative}
+.about h2,.sec h2{font-size:clamp(3rem,11vw,140px)}
+.about p{max-width:620px;font-weight:400;line-height:1.75;font-size:clamp(1rem,1.8vw,1.3rem);color:var(--fg)}
+.about p span{opacity:.2;transition:opacity .3s}
+.orb{position:absolute;border-radius:50%;filter:blur(2px);opacity:var(--orb-op)}
+
+/* Skills */
+.skills{background:var(--skills-bg);color:var(--skills-fg);border-radius:40px 40px 0 0;padding:90px 20px 110px;transition:background .35s,color .35s}
+.skills h2{color:var(--skills-fg);text-align:center;font-weight:900;text-transform:uppercase;font-size:clamp(3rem,11vw,140px);line-height:1;margin-bottom:80px}
+.item{max-width:64rem;margin:0 auto;display:flex;gap:clamp(16px,4vw,56px);padding:36px 0;border-top:1px solid var(--skills-border)}
+.item:last-child{border-bottom:1px solid var(--skills-border)}
+.num{font-weight:900;font-size:clamp(2.8rem,9vw,120px);line-height:1;opacity:.9}
+.item h3{font-weight:600;text-transform:uppercase;font-size:clamp(1rem,2vw,1.8rem)}
+.item p{font-weight:300;line-height:1.6;max-width:42rem;opacity:.7;font-size:clamp(.85rem,1.5vw,1.2rem);margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.chip{display:flex;align-items:center;gap:8px;border:1px solid var(--skills-border);border-radius:999px;padding:5px 16px 5px 6px;font-size:clamp(.8rem,1.2vw,.95rem);font-weight:400}
+.chip i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:.65rem;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+.chip svg{width:18px;height:18px}
+
+/* Internship */
+.exp{background:var(--bg);border-radius:40px 40px 0 0;margin-top:-40px;position:relative;z-index:10;padding:90px 20px 40px}
+.exp h2{text-align:center;margin-bottom:56px;font-size:clamp(3rem,11vw,140px)}
+.xc{max-width:1150px;margin:0 auto;border:2px solid var(--border-strong);border-radius:36px;padding:clamp(20px,4vw,44px);display:grid;grid-template-columns:1fr 2fr;gap:clamp(20px,4vw,52px);background:var(--bg-card)}
+.xc small{display:block;text-transform:uppercase;letter-spacing:.1em;opacity:.65;font-size:.85rem;margin-bottom:8px;color:var(--fg-mut)}
+.xc h3{font-weight:700;text-transform:uppercase;line-height:1.1;font-size:clamp(1.4rem,2.8vw,2.4rem)}
+.xc .d{margin-top:14px;font-weight:300;line-height:1.5;font-size:clamp(.9rem,1.4vw,1.05rem);color:var(--fg-mut)}
+.xc .pill{display:inline-block;margin-top:18px;border:1.5px solid var(--border-strong);border-radius:999px;padding:8px 22px;text-transform:uppercase;letter-spacing:.1em;font-weight:500;font-size:.8rem;background:var(--ghost-bg)}
+.xc ul{list-style:none;display:flex;flex-direction:column;gap:18px}
+.xc li{padding-left:26px;position:relative;font-weight:300;line-height:1.6;font-size:clamp(.95rem,1.5vw,1.2rem)}
+.xc li::before{content:'';position:absolute;left:0;top:.6em;width:9px;height:9px;border-radius:50%;background:linear-gradient(123deg,#B600A8,#BE4C00)}
+
+/* Projects */
+.proj{background:var(--bg);border-radius:40px 40px 0 0;margin-top:-40px;position:relative;z-index:10;padding:90px 20px 110px}
+.proj h2{text-align:center;margin-bottom:56px}
+.wrap{height:85vh;max-width:1150px;margin:0 auto}
+.card{position:sticky;top:90px;border:2px solid var(--border-strong);border-radius:36px;background:var(--bg-card);padding:22px;transform-origin:top center;will-change:transform;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.top .l{display:flex;align-items:center;gap:18px}
+.top .num{background:linear-gradient(180deg,#646973,#BBCCD7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.top small{display:block;text-transform:uppercase;letter-spacing:.1em;opacity:.65;font-size:.8rem;color:var(--fg-mut)}
+.top h3{font-weight:600;text-transform:uppercase;font-size:clamp(1.1rem,2.2vw,1.9rem)}
+.proj-links{display:flex;align-items:center;gap:10px}
+.grid{display:grid;grid-template-columns:2fr 3fr;gap:12px}
+.col{display:flex;flex-direction:column;gap:12px}
+.pan{border-radius:32px;padding:22px;display:flex;flex-direction:column;justify-content:flex-end;font-weight:300;line-height:1.4;font-size:clamp(.8rem,1.35vw,1.1rem);position:relative;overflow:hidden;isolation:isolate;text-shadow:0 1px 8px rgba(0,0,0,.5);color:#fff}
+.pan>svg{position:absolute;inset:0;width:100%;height:100%;z-index:-1;opacity:.4}
+.pan b{font-weight:900;font-size:clamp(1.5rem,3.8vw,3.2rem);line-height:1;display:block;margin-bottom:6px;color:#fff}
+.p1{height:clamp(120px,15vw,220px)}
+.p2{height:clamp(150px,21vw,320px)}
+.p3{height:calc(clamp(120px,15vw,220px) + clamp(150px,21vw,320px) + 12px)}
+
+/* Contact */
+.contact{padding:120px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:36px;background:var(--bg);position:relative;z-index:10}
+.contact p{font-weight:300;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-mut)}
+.contact-actions{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;max-width:700px}
+.copy-pill{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:999px;border:1.5px solid var(--border-strong);background:var(--ghost-bg);font-size:.85rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--fg);cursor:pointer;transition:all .2s}
+.copy-pill:hover{border-color:#BE4C00;background:var(--ghost-hover);transform:translateY(-2px)}
+footer{padding:0 20px 40px;text-align:center;opacity:.55;font-weight:300;font-size:.85rem;color:var(--fg-mut)}
+
+/* Resume Modal */
+#resume-modal{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;place-items:center;padding:20px}
+#resume-modal.active{display:grid}
+.resume-box{background:var(--bg-card);border:2px solid var(--border-strong);border-radius:28px;width:min(100%,680px);max-height:85vh;overflow-y:auto;padding:32px;display:flex;flex-direction:column;gap:20px;box-shadow:0 25px 60px rgba(0,0,0,.5);animation:pop .3s both}
+.resume-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border);padding-bottom:16px}
+.resume-close{background:none;border:none;color:var(--fg);cursor:pointer;font-size:1.4rem;padding:4px}
+.resume-section h4{text-transform:uppercase;letter-spacing:.1em;font-size:.85rem;color:#B600A8;margin-bottom:8px}
+
+/* Responsive adjustments */
+@media(max-width:768px){
+  .hero{padding:0 16px;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start}
+  .hero-spacer{height:54px}
+  .hero h1.rg{font-size:clamp(3.5rem,19vw,7.5rem);margin-top:2px}
+  .sub{font-size:.78rem;gap:10px}
+  .sub span{width:30px}
+  .portrait{position:relative;left:auto;bottom:auto;transform:none!important;width:min(68vw,280px);margin:18px auto 14px;border-radius:140px 140px 0 0}
+  .ring{display:block;--w:min(78vw,330px);bottom:auto;top:50%;left:50%;transform:translate(-50%,-50%)}
+  .ring .o{width:40px;height:40px;margin:-20px 0 0 -20px}
+  .ring .o svg{width:22px;height:22px}
+  .bub{position:relative;left:auto;bottom:auto;transform:none!important;margin:0 auto 16px;max-width:90%;text-align:center}
+  .hbar{margin-top:10px;padding-bottom:24px;flex-direction:column;align-items:center;text-align:center}
+  .hbar p{max-width:100%;font-size:.8rem}
+  .hero-actions{justify-content:center;width:100%}
+  .xc{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+  .p3{height:clamp(160px,30vw,260px)}
+}
+</style>
+</head>
+<body>
+<main>
+
+<!-- Fixed Header Controls: Menu & Theme Switcher -->
+<div class="top-controls">
+  <button id="burger" aria-label="Menu"><span class="bl"><i></i><i></i><i></i></span><em></em></button>
+  <button class="theme-btn" id="theme-toggle" aria-label="Toggle Theme">
+    <span id="theme-icon">
+      <!-- Sun icon for dark mode (click to switch to light) -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </span>
+    <span id="theme-text">Light</span>
+  </button>
+</div>
+
+<!-- Fullscreen Menu -->
+<div id="menu">
+  <a class="ml" style="--n:0" href="#about"><s>01</s>About</a>
+  <a class="ml" style="--n:1" href="#skills"><s>02</s>Skills</a>
+  <a class="ml" style="--n:2" href="#internship"><s>03</s>Internship</a>
+  <a class="ml" style="--n:3" href="#projects"><s>04</s>Projects</a>
+  <a class="ml" style="--n:4" href="#contact"><s>05</s>Contact</a>
+  <div class="mf">
+    <span>rangankulavi@gmail.com</span>
+    <span>Kolkata, India</span>
+  </div>
+  <div class="menu-socials">
+    <a class="menu-social-pill" href="https://github.com/Rangan04" target="_blank" rel="noopener">GitHub</a>
+    <a class="menu-social-pill" href="https://www.linkedin.com/safety/go/?url=https%3A%2F%2Flnkd%2Ein%2Fdas-AJhj&urlhash=CLoz&mt=baLuHNaztR2vlfi7DCI4x84krmRKxR2XNAise9X90y6EI6CICayKjYWUNRdcwKX7Tc5U_j2hUEROMZGf2ujLYCIE0aZEsrZlES6ppnJpBCZWthSd52KlTJqn1w8&isSdui=true" target="_blank" rel="noopener">LinkedIn</a>
+    <button class="menu-social-pill" id="menu-resume-btn" type="button">Resume (CV)</button>
+  </div>
+</div>
+
+<!-- Hero Section -->
+<section class="hero" id="top">
+  <div class="hero-spacer"></div>
+  <div class="hh fade" style="transition-delay:.15s">
+    <p class="eb"><span class="dot"></span>Open to SDE &amp; AI Roles · 2027 Batch <span class="wave">👋</span></p>
+    <h1 class="rg" aria-label="Rangan">
+      <b style="--i:0">R</b><b style="--i:1">a</b><b style="--i:2">n</b><b style="--i:3">g</b><b style="--i:4">a</b><b style="--i:5">n</b>
+    </h1>
+    <p class="sub"><span></span>Software Engineer · AI / ML Developer · 2027 Graduate</p>
+  </div>
+
+  <!-- Interactive Portrait Avatar -->
+  <div class="portrait" id="mag" title="Click me for a wink & new quotes!">
+    <svg id="face" viewBox="0 0 300 400" style="width:100%;height:100%">
+      <defs>
+        <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffd5b8"/>
+          <stop offset="1" stop-color="#d49a75"/>
+        </linearGradient>
+        <linearGradient id="hoodie" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7c3aed"/>
+          <stop offset="50%" stop-color="#4f46e5"/>
+          <stop offset="100%" stop-color="#1e1b4b"/>
+        </linearGradient>
+        <linearGradient id="hoodie-inner" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2e1065"/>
+          <stop offset="100%" stop-color="#1e1b4b"/>
+        </linearGradient>
+        <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1f1e24"/>
+          <stop offset="100%" stop-color="#0a0a0c"/>
+        </linearGradient>
+      </defs>
+      
+      <g id="fl">
+        <!-- Modern Hoodie Body & Neckline -->
+        <path d="M30 400 Q55 315 150 308 Q245 315 270 400 Z" fill="url(#hoodie)"/>
+        <!-- Hoodie Inner Lining -->
+        <path d="M100 320 Q150 355 200 320 L210 350 Q150 388 90 350 Z" fill="url(#hoodie-inner)"/>
+        <!-- Hoodie Drawstrings with Metallic Aglets -->
+        <path d="M136 348 v44 M164 348 v44" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+        <rect x="133.5" y="388" width="5" height="10" rx="2" fill="#d8b4fe"/>
+        <rect x="161.5" y="388" width="5" height="10" rx="2" fill="#d8b4fe"/>
+        <!-- Neck -->
+        <rect x="125" y="246" width="50" height="74" rx="20" fill="#d49a75"/>
+        
+        <!-- Head Container that rotates / tracks -->
+        <g id="hd" style="transition:transform .18s;transform-origin:150px 290px">
+          <!-- Ears -->
+          <ellipse cx="80" cy="190" rx="14" ry="26" fill="#d49a75"/>
+          <ellipse cx="220" cy="190" rx="14" ry="26" fill="#d49a75"/>
+          <!-- Face Base -->
+          <ellipse cx="150" cy="180" rx="72" ry="95" fill="url(#skin)"/>
+          
+          <!-- Modern Styled Hair -->
+          <path d="M74 175 Q62 72 150 70 Q238 72 226 175 Q212 118 150 114 Q88 118 74 175 Z" fill="url(#hairGrad)"/>
+          <path d="M100 100 Q150 82 200 112 Q160 98 120 115" stroke="#3b3b4f" stroke-width="3" fill="none" stroke-linecap="round"/>
+          
+          <!-- Eyebrows -->
+          <path d="M104 150 Q122 138 140 148 M160 148 Q178 138 196 150" stroke="#120e14" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          
+          <!-- Eyes -->
+          <g class="eye" id="eye-l">
+            <ellipse cx="122" cy="177" rx="16" ry="10" fill="#fff"/>
+            <circle class="pu" cx="122" cy="177" r="6.5" fill="#1e1510"/>
+            <circle cx="124" cy="175" r="2.2" fill="#fff" opacity=".9"/>
+          </g>
+          <g class="eye" id="eye-r">
+            <ellipse cx="178" cy="177" rx="16" ry="10" fill="#fff"/>
+            <circle class="pu" cx="178" cy="177" r="6.5" fill="#1e1510"/>
+            <circle cx="180" cy="175" r="2.2" fill="#fff" opacity=".9"/>
+          </g>
+          
+          <!-- Blushing Cheeks -->
+          <circle cx="102" cy="208" r="10" fill="#f43f5e" opacity=".22"/>
+          <circle cx="198" cy="208" r="10" fill="#f43f5e" opacity=".22"/>
+          
+          <!-- Stylish Dark Modern Glasses -->
+          <g fill="rgba(255,255,255,0.06)" stroke="#0f172a" stroke-width="4">
+            <rect x="96" y="158" width="50" height="36" rx="12"/>
+            <rect x="154" y="158" width="50" height="36" rx="12"/>
+          </g>
+          <!-- Glasses Bridge & Temples -->
+          <path d="M146 174 h8 M96 170 L82 166 M204 170 L218 166" stroke="#0f172a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <!-- Lens Glare/Sheen -->
+          <path d="M105 166 h14 M163 166 h14" stroke="#ffffff" opacity=".5" stroke-width="3" stroke-linecap="round"/>
+          
+          <!-- Nose -->
+          <path d="M150 184 Q142 208 152 212" stroke="#b47854" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          
+          <!-- Mouth -->
+          <path d="M128 232 Q150 248 172 232" stroke="#881337" stroke-width="5" fill="none" stroke-linecap="round">
+            <animate attributeName="d" dur="4s" repeatCount="indefinite" values="M128 232 Q150 248 172 232; M125 230 Q150 260 175 230; M128 232 Q150 248 172 232"/>
+          </path>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Orbit Ring of tech icons -->
+  <div class="ring" id="orbit-ring"></div>
+
+  <!-- Interactive Speech Bubble -->
+  <div class="bub" id="bub">Hi! I’m Rangan 👋</div>
+
+  <!-- Bottom Hero Bar with Social & Action Buttons -->
+  <div class="hbar">
+    <p class="fade" style="transition-delay:.35s">Entry-level software &amp; AI engineer crafting robust, production-ready systems</p>
+    <div class="hero-actions fade" style="transition-delay:.45s">
+      <!-- GitHub Button -->
+      <a class="social-pill" href="https://github.com/Rangan04" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+      <!-- LinkedIn Button -->
+      <a class="social-pill" href="https://www.linkedin.com/safety/go/?url=https%3A%2F%2Flnkd%2Ein%2Fdas-AJhj&urlhash=CLoz&mt=baLuHNaztR2vlfi7DCI4x84krmRKxR2XNAise9X90y6EI6CICayKjYWUNRdcwKX7Tc5U_j2hUEROMZGf2ujLYCIE0aZEsrZlES6ppnJpBCZWthSd52KlTJqn1w8&isSdui=true" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76c.96 0 1.74-.78 1.74-1.75a1.75 1.75 0 1 0-3.49 0c0 .97.78 1.75 1.75 1.75m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+        LinkedIn
+      </a>
+      <!-- Resume (CV) Button -->
+      <button class="social-pill" id="hero-resume-btn" type="button" aria-label="Resume">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Resume
+      </button>
+      <!-- Contact Button -->
+      <a class="btn" href="#contact">Contact Me</a>
+    </div>
+  </div>
+</section>
+
+<!-- Continuous Auto-Scrolling Tech Marquee -->
+<section class="mq" aria-label="Technologies Marquee">
+  <div class="row" id="r1"></div>
+  <div class="row" id="r2"></div>
+</section>
+
+<!-- About Section -->
+<section class="about" id="about">
+  <div class="orb" style="width:120px;height:120px;top:4%;left:4%;background:radial-gradient(circle at 30% 30%,#BBCCD7,#646973)"></div>
+  <div class="orb" style="width:90px;height:90px;bottom:8%;left:10%;background:radial-gradient(circle at 30% 30%,#B600A8,#18011F)"></div>
+  <div class="orb" style="width:120px;height:120px;top:4%;right:4%;background:radial-gradient(circle at 30% 30%,#BE4C00,#18011F)"></div>
+  <div class="orb" style="width:110px;height:110px;bottom:8%;right:10%;background:radial-gradient(circle at 30% 30%,#7621B0,#18011F)"></div>
+  <h2 class="g fade">About me</h2>
+  <p id="anim">I’m a B.Tech student in Electronics and Communication Engineering at Heritage Institute of Technology, Kolkata, focused on software development, machine learning, and generative AI. I build RAG-powered tools and deep learning apps that turn complex ideas into software people can actually use. Let’s build something incredible together!</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <a class="btn fade" href="#contact">Contact Me</a>
+    <button class="social-pill fade" id="about-resume-btn" type="button">View Resume</button>
+  </div>
+</section>
+
+<!-- Skills Section -->
+<section class="skills" id="skills">
+  <h2 class="fade">Skills</h2>
+  <div id="sk"></div>
+</section>
+
+<!-- Internship Section -->
+<section class="exp" id="internship">
+  <h2 class="g fade">Internship</h2>
+  <div class="xc fade">
+    <div>
+      <small>Industrial Training / Internship</small>
+      <h3>NTPC Limited</h3>
+      <p class="d">Farakka Super Thermal Power Station<br>Farakka, West Bengal, India</p>
+      <span class="pill">June 2026 – July 2026</span>
+    </div>
+    <ul>
+      <li>Gained practical exposure to the thermal power generation process, including boiler, turbine, generator, and auxiliary systems.</li>
+      <li>Studied industrial instrumentation, control, monitoring, and electrical protection systems used in plant operations.</li>
+      <li>Learned about equipment maintenance, plant operations, automation, and industrial safety practices through on-site exposure.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Projects Section -->
+<section class="proj" id="projects">
+  <h2 class="g fade">Projects</h2>
+  <div id="pj"></div>
+</section>
+
+<!-- Contact Section with Socials & 1-Click Copy -->
+<section class="contact" id="contact">
+  <h2 class="g fade" style="font-size:clamp(3rem,11vw,140px)">Let’s talk</h2>
+  <p class="fade">Actively seeking SDE Internships &amp; 2027 Full-Time Roles · Kolkata / Remote / Open to Relocate</p>
+  
+  <div class="contact-actions fade">
+    <a class="btn" href="mailto:rangankulavi@gmail.com">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      rangankulavi@gmail.com
+    </a>
+    <button class="copy-pill" id="copy-email-btn" type="button">
+      <span id="copy-text">Copy Email</span>
+    </button>
+  </div>
+
+  <div class="contact-actions fade" style="margin-top:8px">
+    <a class="social-pill" href="https://github.com/Rangan04" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      GitHub Profile
+    </a>
+    <a class="social-pill" href="https://www.linkedin.com/safety/go/?url=https%3A%2F%2Flnkd%2Ein%2Fdas-AJhj&urlhash=CLoz&mt=baLuHNaztR2vlfi7DCI4x84krmRKxR2XNAise9X90y6EI6CICayKjYWUNRdcwKX7Tc5U_j2hUEROMZGf2ujLYCIE0aZEsrZlES6ppnJpBCZWthSd52KlTJqn1w8&isSdui=true" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76c.96 0 1.74-.78 1.74-1.75a1.75 1.75 0 1 0-3.49 0c0 .97.78 1.75 1.75 1.75m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+      LinkedIn Profile
+    </a>
+    <button class="social-pill" id="contact-resume-btn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Resume (CV)
+    </button>
+  </div>
+</section>
+
+<footer>© 2026 Rangan Kulavi · Designed &amp; Crafted for AI &amp; Software Engineering</footer>
+
+<!-- Resume Modal -->
+<div id="resume-modal" role="dialog" aria-modal="true" aria-label="Resume Overview">
+  <div class="resume-box">
+    <div class="resume-header">
+      <div>
+        <h3 style="font-size:1.4rem;font-weight:700">Rangan Kulavi</h3>
+        <p style="color:var(--fg-mut);font-size:.9rem">Software Engineer · AI / ML Developer · Class of 2027</p>
+      </div>
+      <button class="resume-close" id="resume-close" aria-label="Close Modal">&times;</button>
+    </div>
+    <div class="resume-section">
+      <h4>Target Roles</h4>
+      <p>SDE Intern, Junior AI/ML Engineer, Graduate Software Engineer (2027 Batch), Python / Java Backend Developer.</p>
+    </div>
+    <div class="resume-section">
+      <h4>Education</h4>
+      <p><strong>Heritage Institute of Technology, Kolkata</strong><br>B.Tech in Electronics &amp; Communication Engineering (ECE) · <em>Class of 2027</em></p>
+    </div>
+    <div class="resume-section">
+      <h4>Core Technical Competencies</h4>
+      <p><strong>Languages &amp; Core:</strong> Java (Data Structures &amp; Algorithms, OOP), Python, JavaScript, C, SQL.<br>
+      <strong>AI / ML &amp; Frameworks:</strong> LangChain, RAG Pipelines, Vector DBs (FAISS, ChromaDB), TensorFlow, Keras, Scikit-learn, OpenCV.<br>
+      <strong>Web &amp; Tools:</strong> Flask, Streamlit, Git/GitHub, REST APIs, Linux basics, MySQL, MongoDB.</p>
+    </div>
+    <div class="resume-section">
+      <h4>Industrial Experience</h4>
+      <p><strong>NTPC Limited</strong> — Industrial Training (Instrumentation, Control, Automation &amp; Power Generation).</p>
+    </div>
+    <div class="resume-section">
+      <h4>Availability &amp; Opportunities</h4>
+      <p>Available for 6-Month / Summer Internships, Pre-Placement (PPO) opportunities, and 2027 Full-Time Onboarding. Open to On-site, Hybrid, or Remote roles.</p>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+      <a class="btn" href="mailto:rangankulavi@gmail.com?subject=Opportunity%20-%20Interview%20Invitation">Email for Interview</a>
+      <a class="social-pill" href="mailto:rangankulavi@gmail.com?subject=Request%20Full%20Resume%20PDF">Request PDF Resume</a>
+      <button class="ghost" id="resume-done-btn" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+
+/* ==========================================================
+   1. Theme Switcher (Light / Dark mode)
+   ========================================================== */
+const themeToggle=$('#theme-toggle');
+const themeIcon=$('#theme-icon');
+const themeText=$('#theme-text');
+
+const sunSvg=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moonSvg=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('portfolio-theme',t)}catch(e){}
+  if(t==='light'){
+    themeIcon.innerHTML=moonSvg;
+    themeText.textContent='Dark';
+  } else {
+    themeIcon.innerHTML=sunSvg;
+    themeText.textContent='Light';
+  }
+}
+const savedTheme=(()=>{try{return localStorage.getItem('portfolio-theme')}catch(e){return null}})();
+if(savedTheme){
+  setTheme(savedTheme);
+} else {
+  setTheme('dark');
+}
+themeToggle.onclick=()=>{
+  const current=document.documentElement.getAttribute('data-theme');
+  setTheme(current==='light'?'dark':'light');
+};
+
+/* ==========================================================
+   2. Resume Modal & 1-Click Copy
+   ========================================================== */
+const resumeModal=$('#resume-modal');
+const openResume=()=>resumeModal.classList.add('active');
+const closeResume=()=>resumeModal.classList.remove('active');
+$('#hero-resume-btn').onclick=openResume;
+$('#about-resume-btn').onclick=openResume;
+$('#contact-resume-btn').onclick=openResume;
+$('#menu-resume-btn').onclick=()=>{mn.classList.remove('open');bg.classList.remove('x');openResume();};
+$('#resume-close').onclick=closeResume;
+$('#resume-done-btn').onclick=closeResume;
+resumeModal.onclick=(e)=>{if(e.target===resumeModal)closeResume()};
+
+const copyBtn=$('#copy-email-btn');
+const copyTxt=$('#copy-text');
+copyBtn.onclick=()=>{
+  navigator.clipboard.writeText('rangankulavi@gmail.com').then(()=>{
+    copyTxt.textContent='Copied!';
+    setTimeout(()=>copyTxt.textContent='Copy Email',2000);
+  }).catch(()=>{
+    copyTxt.textContent='Copied: rangankulavi@gmail.com';
+  });
+};
+
+/* ==========================================================
+   3. Tech Icons & Data
+   ========================================================== */
+const PY=`<svg viewBox='0 0 24 24'><path d='M12 2C7 2 7 4 7 5.5V8h5v1H5.5C3.5 9 2 10.5 2 13s1.5 4 3.5 4H7v-3c0-1.5 1.5-3 3-3h5c1.5 0 2-1 2-2.5V5.5C17 4 16 2 12 2z' fill='#3776AB'/><path d='M12 22c5 0 5-2 5-3.5V16h-5v-1h6.5c2 0 3.5-1.5 3.5-4s-1.5-4-3.5-4H17v3c0 1.5-1.5 3-3 3H9c-1.5 0-2 1-2 2.5v3.5C7 20 8 22 12 22z' fill='#FFD43B'/><circle cx='9.5' cy='4.8' r='.9' fill='#fff'/><circle cx='14.5' cy='19.2' r='.9' fill='#fff'/></svg>`;
+const JV=`<svg viewBox='0 0 24 24'><path d='M5 14h11v2.5a3.5 3.5 0 0 1-3.5 3.5h-4A3.5 3.5 0 0 1 5 16.5z' fill='#E76F00'/><path d='M16 15h1.5a2 2 0 0 1 0 4H15' fill='none' stroke='#5382A1' stroke-width='1.6'/><path d='M9 3c2 2-2 3 0 5M13 3c2 2-2 3 0 5' fill='none' stroke='#E76F00' stroke-width='1.4' stroke-linecap='round'/></svg>`;
+const GT=`<svg viewBox='0 0 24 24'><path d='M12 2l10 10-10 10L2 12z' fill='#F05032'/><circle cx='9' cy='9' r='1.8' fill='#fff'/><circle cx='14' cy='14' r='1.8' fill='#fff'/><path d='M9 9l5 5' stroke='#fff' stroke-width='1.5'/></svg>`;
+const INF=`<svg viewBox='0 0 24 24'><path d='M7 9a3 3 0 1 0 0 6c3 0 7-6 10-6a3 3 0 1 1 0 6c-3 0-7-6-10-6z' fill='none' stroke='#fff' stroke-width='1.8'/></svg>`;
+const LF=`<svg viewBox='0 0 24 24'><path d='M12 2c3 4 5 7 5 11a5 5 0 0 1-3.5 4.8L12.6 22h-1.2l-.9-4.2A5 5 0 0 1 7 13c0-4 2-7 5-11z' fill='#fff'/></svg>`;
+
+const L={
+  Python:['#fff','',PY],
+  Java:['#fff','',JV],
+  JavaScript:['#F7DF1E','#000','JS'],
+  C:['#00599C','#fff','C'],
+  Flask:['#222','#fff','Fl'],
+  Streamlit:['#FF4B4B','#fff','St'],
+  Gemini:['#4285F4','#fff','✦'],
+  'Hugging Face':['#FFD21E','#000','HF'],
+  Groq:['#F55036','#fff','G'],
+  LangChain:['#1C3C3C','#fff','LC'],
+  ChromaDB:['#FFDE2D','#000','Ch'],
+  'Scikit-learn':['#F7931E','#fff','sk'],
+  TensorFlow:['#FF6F00','#fff','TF'],
+  Keras:['#D00000','#fff','K'],
+  Pandas:['#150458','#fff','Pd'],
+  NumPy:['#013243','#fff','Np'],
+  OpenCV:['#5C3EE8','#fff','CV'],
+  Arduino:['#00979D','#fff',INF],
+  ESP32:['#E7352C','#fff','ESP'],
+  'Raspberry Pi':['#A22846','#fff','Pi'],
+  Cadence:['#1D4E89','#fff','Cd'],
+  Vivado:['#D32F2F','#fff','Vv'],
+  Git:['#fff','',GT],
+  'VS Code':['#007ACC','#fff','VS'],
+  IntelliJ:['#000','#fff','IJ'],
+  MySQL:['#00758F','#fff','My'],
+  MongoDB:['#47A248','#fff',LF]
+};
+
+// Skills items
+const skills=[
+  ["Generative AI & NLP","RAG pipelines with LangChain, FAISS and ChromaDB, plus LLM APIs like Gemini, Hugging Face and Groq."],
+  ["Machine Learning","Scikit-learn, TensorFlow, Keras, Pandas, NumPy and OpenCV for classification and computer vision."],
+  ["Software Development","Java (DSA focused), Python, JavaScript and C, with Flask, Streamlit and MERN-stack training."],
+  ["Embedded & Hardware","Arduino, ESP32, Raspberry Pi, plus Cadence Virtuoso and Vivado (VHDL) from my ECE coursework."],
+  ["Tools & Databases","Git, VS Code, IntelliJ, MySQL and MongoDB for shipping and maintaining projects."]
+];
+$('#sk').innerHTML=skills.map((s,i)=>`
+  <div class="item fade" style="transition-delay:${i*.1}s">
+    <div class="num">0${i+1}</div>
+    <div><h3>${s[0]}</h3><p>${s[1]}</p></div>
+  </div>
+`).join('');
+
+const sets=[
+  ['Gemini','Hugging Face','Groq','LangChain','ChromaDB'],
+  ['Scikit-learn','TensorFlow','Keras','Pandas','NumPy','OpenCV'],
+  ['Java','Python','JavaScript','C','Flask','Streamlit'],
+  ['Arduino','ESP32','Raspberry Pi','Cadence','Vivado'],
+  ['Git','VS Code','IntelliJ','MySQL','MongoDB']
+];
+document.querySelectorAll('#sk .item').forEach((el,i)=>{
+  el.lastElementChild.insertAdjacentHTML('beforeend','<div class="chips">'+sets[i].map(n=>{
+    const [b,f,c]=L[n];
+    return `<span class="chip"><i style="background:${b};color:${f}">${c}</i>${n}</span>`;
+  }).join('')+'</div>');
+});
+
+// Orbit Ring
+const obList=['Python','Java','TensorFlow','LangChain','Git','Arduino','Gemini','Streamlit'];
+const ob=obList.map((n,k)=>{
+  const a=k/obList.length*Math.PI*2;
+  const [b,f,c]=L[n];
+  return `<div class="o" style="left:${50+50*Math.cos(a)}%;top:${50+50*Math.sin(a)}%"><i style="background:${b};color:${f}">${c}</i></div>`;
+}).join('');
+$('#orbit-ring').innerHTML=ob;
+
+/* ==========================================================
+   4. Continuous Auto-Scrolling Tech Marquee
+   ========================================================== */
+const M1=[['LangChain','Chains & agents'],['Python','Daily driver'],['TensorFlow','Deep learning'],['Gemini','LLM APIs'],['Arduino','Embedded'],['Streamlit','Ship the demo'],['Keras','CNN · VGG16'],['OpenCV','Computer vision'],['Java','DSA in Java'],['Scikit-learn','Classic ML'],['ESP32','IoT']];
+const M2=[['Hugging Face','Models'],['Groq','Fast inference'],['Pandas','Data wrangling'],['NumPy','Arrays'],['Flask','Backend APIs'],['MongoDB','Documents'],['MySQL','SQL'],['Git','Version control'],['Raspberry Pi','Edge'],['ChromaDB','Vector store']];
+
+const tc=([n,t],i)=>{
+  const [b,f,c]=L[n];
+  return `<div class="tc" style="--c:${b==='#fff'?'#7621B0':b}"><div class="ic" style="background:${b};color:${f}">${c}</div><div><b>${n}</b><small>${t}</small></div><em>${String(i+1).padStart(2,'0')}</em></div>`;
+};
+const h1=M1.map(tc).join('');
+const h2=M2.map(tc).join('');
+const r1=$('#r1'), r2=$('#r2'), mq=$('.mq');
+r1.innerHTML=h1+h1+h1+h1;
+r2.innerHTML=h2+h2+h2+h2;
+
+let autoOffset=0;
+let isHovered=false;
+mq.addEventListener('mouseenter',()=>{isHovered=true});
+mq.addEventListener('mouseleave',()=>{isHovered=false});
+
+function glideMarquee(){
+  if(!isHovered){
+    autoOffset+=0.75; // continuous constant smooth translation
+  } else {
+    autoOffset+=0.2;  // slow glide on hover so readable
+  }
+  const scrollShift=(scrollY - mq.offsetTop + innerHeight)*0.22;
+  const pos1=(autoOffset + scrollShift);
+  const pos2=(autoOffset - scrollShift);
+  r1.style.transform=`translate3d(${-(pos1%2800)}px,0,0)`;
+  r2.style.transform=`translate3d(${-(2800-(pos2%2800))}px,0,0)`;
+  requestAnimationFrame(glideMarquee);
+}
+requestAnimationFrame(glideMarquee);
+
+/* ==========================================================
+   5. Projects Section with GitHub & Demo buttons
+   ========================================================== */
+const projs=[
+  [
+    "AskTube AI",
+    "Generative AI · LangChain · Vector RAG",
+    ["RAG","Query any YouTube video via semantic vector indexing","FAISS","Efficient context retrieval that reduces hallucination"],
+    ["Active learning","An interactive chatbot that turns passive watching into a tutor"],
+    "linear-gradient(135deg,#7621B0,#18011F)",
+    "https://github.com/Rangan04",
+    "https://github.com/Rangan04"
+  ],
+  [
+    "Brain Tumor Detection",
+    "Deep Learning · CNN · VGG16",
+    ["89%","Accuracy classifying MRI scans into four categories","Fine-tuned","Transfer learning with data augmentation"],
+    ["Streamlit","Web-based diagnostic tool with real-time image processing"],
+    "linear-gradient(135deg,#B600A8,#18011F)",
+    "https://github.com/Rangan04",
+    "https://github.com/Rangan04"
+  ],
+  [
+    "Fake News Detection",
+    "Machine Learning · Scikit-learn",
+    ["89.24%","Accuracy with Logistic Regression + TF-IDF","Confidence score","Helps users judge how reliable a news snippet is"],
+    ["Classifier","A lightweight, explainable NLP baseline"],
+    "linear-gradient(135deg,#BE4C00,#18011F)",
+    "https://github.com/Rangan04/Fake_news_detection",
+    "https://github.com/Rangan04/Fake_news_detection"
+  ]
+];
+
+$('#pj').innerHTML=projs.map((p,i)=>`
+  <div class="wrap">
+    <div class="card" data-i="${i}" style="top:${90+i*26}px">
+      <div class="top">
+        <div class="l">
+          <div class="num">0${i+1}</div>
+          <div><small>${p[1]}</small><h3>${p[0]}</h3></div>
+        </div>
+        <div class="proj-links">
+          <a class="ghost" href="${p[5]}" target="_blank" rel="noopener">Code</a>
+          <a class="social-pill" href="${p[6]}" target="_blank" rel="noopener">Demo</a>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col">
+          <div class="pan p1" style="background:${p[4]}"><b>${p[2][0]}</b>${p[2][1]}</div>
+          <div class="pan p2" style="background:var(--bg-subtle);border:1px solid var(--border)"><b>${p[2][2]}</b>${p[2][3]}</div>
+        </div>
+        <div class="pan p3" style="background:${p[4]}"><b>${p[3][0]}</b>${p[3][1]}</div>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+const art=(i,k)=>{
+  const s=[
+    [
+      `<rect x="60" y="60" width="280" height="180" rx="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M175 110l60 40-60 40z" fill="#fff"/><rect x="60" y="260" width="280" height="8" rx="4" fill="#fff" opacity=".4"/><rect x="60" y="260" width="120" height="8" rx="4" fill="#fff"><animate attributeName="width" values="20;280;20" dur="6s" repeatCount="indefinite"/></rect>`,
+      `<rect x="40" y="50" width="200" height="60" rx="24" fill="#fff" opacity=".85"/><rect x="160" y="140" width="200" height="60" rx="24" fill="#fff" opacity=".45"/><rect x="40" y="230" width="240" height="50" rx="24" fill="#fff" opacity=".85"/>`,
+      `<path d="M80 80L200 150L320 70M200 150L120 240L300 230M200 150L300 230M80 80L120 240" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/><g fill="#fff"><circle cx="80" cy="80" r="14"/><circle cx="200" cy="150" r="22"><animate attributeName="r" values="18;28;18" dur="3s" repeatCount="indefinite"/></circle><circle cx="320" cy="70" r="14"/><circle cx="120" cy="240" r="14"/><circle cx="300" cy="230" r="14"/></g>`
+    ],
+    [
+      `<g fill="none" stroke="#fff" stroke-width="4"><ellipse cx="200" cy="150" rx="110" ry="125"/><ellipse cx="200" cy="150" rx="80" ry="95" opacity=".6"/></g><circle cx="235" cy="120" r="26" fill="#fff"><animate attributeName="opacity" values=".3;1;.3" dur="2.5s" repeatCount="indefinite"/></circle>`,
+      `<g fill="none" stroke="#fff" stroke-width="3" opacity=".8"><rect x="50" y="40" width="130" height="100" rx="14"/><rect x="220" y="40" width="130" height="100" rx="14"/><rect x="50" y="160" width="130" height="100" rx="14"/><rect x="220" y="160" width="130" height="100" rx="14"/></g><g fill="#fff"><circle cx="115" cy="90" r="22"/><circle cx="285" cy="90" r="30" opacity=".6"/><circle cx="115" cy="210" r="14" opacity=".6"/><circle cx="285" cy="210" r="26"/></g>`,
+      `<path d="M200 50C130 40 80 90 90 150C60 180 90 250 150 240C170 270 230 270 250 240C320 250 340 180 310 150C320 90 270 40 200 50Z" fill="none" stroke="#fff" stroke-width="5"/><path d="M200 50V250" stroke="#fff" stroke-width="3" opacity=".5"/><rect x="50" y="0" width="300" height="6" fill="#fff"><animate attributeName="y" values="30;270;30" dur="4s" repeatCount="indefinite"/></rect>`
+    ],
+    [
+      `<rect x="70" y="40" width="260" height="220" rx="16" fill="none" stroke="#fff" stroke-width="4"/><rect x="95" y="65" width="210" height="34" rx="6" fill="#fff"/><g fill="#fff" opacity=".6"><rect x="95" y="120" width="210" height="8" rx="4"/><rect x="95" y="145" width="170" height="8" rx="4"/><rect x="95" y="170" width="210" height="8" rx="4"/><rect x="95" y="195" width="120" height="8" rx="4"/></g>`,
+      `<path d="M70 230A130 130 0 0 1 330 230" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".3"/><path d="M70 230A130 130 0 0 1 300 150" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round"/>`,
+      `<g fill="#fff"><rect x="80" y="150" width="40" height="110" rx="8" opacity=".5"/><rect x="150" y="90" width="40" height="170" rx="8"/><rect x="220" y="120" width="40" height="140" rx="8" opacity=".7"/><rect x="290" y="60" width="40" height="200" rx="8"/></g>`
+    ]
+  ];
+  return `<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">${s[i][k]}</svg>`;
+};
+document.querySelectorAll('.card').forEach(c=>{
+  const i=+c.dataset.i;
+  ['p1','p2','p3'].forEach((q,k)=>c.querySelector('.'+q).insertAdjacentHTML('afterbegin',art(i,k)));
+});
+
+/* ==========================================================
+   6. Animated Text & Scroll Interactions
+   ========================================================== */
+const an=$('#anim'),txt=an.textContent;
+an.innerHTML=[...txt].map(c=>`<span>${c}</span>`).join('');
+const chars=[...an.children];
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('in');
+    io.unobserve(e.target);
+  }
+}),{rootMargin:'50px'});
+document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+
+function onScroll(){
+  const vh=innerHeight;
+  const b=an.getBoundingClientRect(),start=vh*.8,end=vh*.2;
+  const prog=Math.min(1,Math.max(0,(start-b.top)/((start-end)+b.height)));
+  const n=chars.length;
+  chars.forEach((c,i)=>{
+    const t=Math.min(1,Math.max(0,(prog*n*1.1-i)/6));
+    c.style.opacity=.2+.8*t;
+  });
+  document.querySelectorAll('.card').forEach(c=>{
+    const i=+c.dataset.i,w=c.parentElement.getBoundingClientRect();
+    const target=1-(projs.length-1-i)*.03;
+    const p=Math.min(1,Math.max(0,(-w.top+vh*.15)/(w.height)));
+    c.style.transform=`scale(${1-(1-target)*p})`;
+  });
+}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',onScroll);
+onScroll();
+
+/* ==========================================================
+   7. Burger Menu
+   ========================================================== */
+const bg=$('#burger'),mn=$('#menu');
+bg.onclick=()=>{mn.classList.toggle('open');bg.classList.toggle('x')};
+mn.querySelectorAll('a').forEach(a=>a.onclick=()=>{mn.classList.remove('open');bg.classList.remove('x')});
+
+/* ==========================================================
+   8. Avatar Mouse & Touch Tracking
+   ========================================================== */
+const hd=$('#hd'),pu=document.querySelectorAll('.pu');
+function look(x,y){
+  const r=$('#face').getBoundingClientRect();
+  const dx=Math.max(-1,Math.min(1,(x-(r.left+r.width/2))/(innerWidth/2)));
+  const dy=Math.max(-1,Math.min(1,(y-(r.top+r.height*.45))/(innerHeight/2)));
+  pu.forEach(p=>p.style.transform=`translate(${dx*7}px,${dy*5}px)`);
+  hd.style.transform=`rotate(${dx*4}deg) translate(${dx*4}px,${dy*2}px)`;
+}
+addEventListener('mousemove',e=>look(e.clientX,e.clientY));
+addEventListener('touchmove',e=>look(e.touches[0].clientX,e.touches[0].clientY),{passive:true});
+
+/* ==========================================================
+   9. Interactive Speech Bubble & Wink Reactions
+   ========================================================== */
+const say=[
+  'Open to SDE Roles · 2027 Batch 🚀',
+  'Ready for Internships & Pre-Placements 💼',
+  'Strong foundation in Java DSA & Python ⚡',
+  'I build RAG pipelines & AI agents 🤖',
+  'Ask me about AskTube AI 🎥',
+  'Fine-tuning CNNs & Vision models 🧠',
+  'Let’s connect and chat! ✨'
+];
+let si=0;
+function triggerWink(){
+  const eyes=document.querySelectorAll('.eye');
+  // Alternate wink
+  const eyeToWink=eyes[si%2===0?1:0];
+  eyeToWink.classList.add('w');
+  setTimeout(()=>eyeToWink.classList.remove('w'),550);
+  
+  si=(si+1)%say.length;
+  const b=$('#bub');
+  b.textContent=say[si];
+  b.style.animation='none';
+  b.offsetWidth;
+  b.style.animation='pop .35s both';
+}
+$('#mag').addEventListener('click',triggerWink);
+$('#bub').addEventListener('click',triggerWink);
+
+/* ==========================================================
+   10. Avatar Magnet Effect on Desktop
+   ========================================================== */
+const m=$('#mag');
+addEventListener('mousemove',e=>{
+  if(innerWidth<769)return;
+  const r=m.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const dx=e.clientX-cx,dy=e.clientY-cy;
+  if(Math.abs(dx)<r.width/2+150 && Math.abs(dy)<r.height/2+150){
+    m.style.transition='transform .3s ease-out';
+    m.style.transform=`translate3d(calc(-50% + ${dx/3.5}px),${dy/3.5}px,0)`;
+  } else {
+    m.style.transition='transform .6s ease-in-out';
+    m.style.transform='translate3d(-50%,0,0)';
+  }
+});
+</script>
+</body>
+</html>
